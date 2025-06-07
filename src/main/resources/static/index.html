@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Weather Test</title>
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('cityInput').value;
+            document.getElementById('result').innerText = "Loading...";
+            
+            try {
+                const response = await fetch(`http://localhost:8080/weather/current?city=${city}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server returned ${response.status}: ${errorText || response.statusText}`);
+                }
+                
+                const data = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('result').innerText = `Error: ${error.message}`;
+                console.error("Detailed error:", error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Weather Test</h1>
+    <input id="cityInput" type="text" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+    <pre id="result"></pre>
+</body>
+</html>
