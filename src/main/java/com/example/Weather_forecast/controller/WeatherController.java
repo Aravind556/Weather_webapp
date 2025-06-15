@@ -13,7 +13,6 @@ import com.example.Weather_forecast.Model.WeeklyForecast;
 import com.example.Weather_forecast.service.WeatherService;
 
 import ch.qos.logback.classic.Logger;
-import io.micrometer.core.ipc.http.HttpSender;
 import reactor.core.publisher.Mono;
 
 
