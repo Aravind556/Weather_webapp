@@ -13,7 +13,7 @@ public class Webconfig implements WebFluxConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*") // Adjust the origin as needed
+                .allowedOrigins("https:localhost:5500") // Adjust the origin as needed
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }

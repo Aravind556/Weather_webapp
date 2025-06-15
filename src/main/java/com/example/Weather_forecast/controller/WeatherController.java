@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Weather_forecast.Model.WeatherData;
+import com.example.Weather_forecast.Model.WeeklyForecast;
 import com.example.Weather_forecast.service.WeatherService;
 
 import ch.qos.logback.classic.Logger;
+import io.micrometer.core.ipc.http.HttpSender;
 import reactor.core.publisher.Mono;
 
 
@@ -34,6 +36,18 @@ public class WeatherController {
                     return Mono.just(ResponseEntity.status(500).body(null));
                 });
     }
+
+    @GetMapping("/forecast")
+    public Mono<ResponseEntity<WeeklyForecast>> WeeklyForecast(@RequestParam String city) {
+        logger.info("Fetching weekly forecast");
+        return weatherService.getweeklyforecast(city)
+            .map(ResponseEntity::ok)
+            .onErrorResume(e-> {
+                logger.error("Error fetching the weekly forecast");
+                return Mono.just(ResponseEntity.status(500).body(null));
+            });
+    }
+    
     
 
     
