@@ -2,6 +2,7 @@ package com.example.Weather_forecast.controller;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,11 +30,11 @@ public class WeatherController {
     public Mono<ResponseEntity<WeatherData>> currentweather(@RequestParam(required = false) String city) {
         logger.info("Fetching current weather for city: " + city);
         return weatherService.getcurrentweather(city)
-                .map(ResponseEntity::ok)
-                .onErrorResume(e -> {
-                    logger.error("Error fetching weather data for city: " + city, e);
-                    return Mono.just(ResponseEntity.status(500).body(null));
-                });
+                .map(ResponseEntity::ok);
+                // .onErrorResume(e -> {
+                //     logger.error("Error fetching current weather", e);
+                //     return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null));
+                // });
     }
 
     @GetMapping("/forecast")
@@ -43,7 +44,8 @@ public class WeatherController {
             .map(ResponseEntity::ok)
             .onErrorResume(e-> {
                 logger.error("Error fetching the weekly forecast");
-                return Mono.just(ResponseEntity.status(500).body(null));
+                return Mono.error(new RuntimeException("Not found"));
+                //return Mono.just(ResponseEntity.status(500).body(null));
             });
     }
     

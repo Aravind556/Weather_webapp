@@ -400,8 +400,12 @@
     <script>
         async function getWeather() {
             const city = document.getElementById('cityInput').value.trim();
+            
+            // Uncomment and enhance this empty input validation
             if (!city) {
                 showError('Please enter a city name');
+                hideWeatherCard();
+                hideForecastContainer();
                 return;
             }
             
@@ -415,8 +419,19 @@
                 const response = await fetch(`/weather/current?city=${encodeURIComponent(city)}`);
                 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`${response.status}: ${errorText || response.statusText}`);
+                    // Better handling of specific error status codes
+                    if (response.status === 404) {
+                        throw new Error('City not found');
+                    } else {
+                        const errorText = await response.text();
+                        // Try to parse as JSON for structured error
+                        try {
+                            const errorData = JSON.parse(errorText);
+                            throw new Error(errorData.message || `Error: ${response.status}`);
+                        } catch (jsonError) {
+                            throw new Error(`Error: ${response.status}`);
+                        }
+                    }
                 }
                 
                 const data = await response.json();
@@ -426,7 +441,7 @@
                 getWeeklyForecast(city);
                 
             } catch (error) {
-                showError(`Error: ${error.message}`);
+                showError(error.message);
                 console.error("Detailed error:", error);
             } finally {
                 showLoading(false);
@@ -441,14 +456,25 @@
                 const response = await fetch(`/weather/forecast?city=${encodeURIComponent(city)}`);
                 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`${response.status}: ${errorText || response.statusText}`);
+                    // Better handling of specific error status codes
+                    if (response.status === 404) {
+                        throw new Error('City not found');
+                    } else {
+                        const errorText = await response.text();
+                        // Try to parse as JSON for structured error
+                        try {
+                            const errorData = JSON.parse(errorText);
+                            throw new Error(errorData.message || `Error: ${response.status}`);
+                        } catch (jsonError) {
+                            throw new Error(`Error: ${response.status}`);
+                        }
+                    }
                 }
                 
                 const data = await response.json();
                 displayWeeklyForecast(data);
             } catch (error) {
-                showForecastError(`Error loading forecast: ${error.message}`);
+                showForecastError(error.message);
                 console.error("Forecast error:", error);
             } finally {
                 showForecastLoading(false);
