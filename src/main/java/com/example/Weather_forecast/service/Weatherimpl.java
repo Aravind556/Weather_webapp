@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
 import com.example.Weather_forecast.ExceptionHandling.CityNotFound;
-import com.example.Weather_forecast.Model.ApiError;
 import com.example.Weather_forecast.Model.DailyForecast;
 import com.example.Weather_forecast.Model.WeatherData;
 import com.example.Weather_forecast.Model.WeeklyForecast;
